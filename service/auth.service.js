@@ -63,7 +63,21 @@ const loginUser = async (email, password) => {
     };
 };
 
+const getUserById = async (id) => {
+    const [users] = await db.query(
+        'SELECT id, name, email, created_at FROM users WHERE id = ?',
+        [id]
+    );
+
+    if (users.length === 0) {
+        throw new Error('User not found');
+    }
+
+    return users[0];
+};
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    getUserById
 };

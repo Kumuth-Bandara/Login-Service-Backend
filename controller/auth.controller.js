@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const { registerUser, loginUser } = require('../service/auth.service');
+const { registerUser, loginUser, getUserById } = require('../service/auth.service');
 
 const register = async (req, res) => {
     const errors = validationResult(req);
@@ -75,7 +75,34 @@ const login = async (req, res) => {
     }
 };
 
+const getMe = async (req, res) => {
+    try {
+        const user = await getUserById(req.user.id);
+
+        res.status(200).json({
+            success: true,
+            message: 'Authenticated user',
+            data: user
+        });
+    } catch (error) {
+        if (error.message === 'User not found') {
+            return res.status(404).json({
+                success: false,
+                message: error.message
+            });
+        }
+
+        console.error('Get user error:', error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Failed to get user'
+        });
+    }
+};
+
 module.exports = {
     register,
-    login
+    login,
+    getMe
 };
