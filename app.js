@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/auth.routes');
 const db = require('./config/database');
+const errorHandler = require('./middleware/error.middleware');
 
 const app = express();
 
@@ -37,6 +38,8 @@ app.get('/test-db', async (req, res) => {
         });
     }
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
